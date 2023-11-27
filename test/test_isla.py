@@ -1,1 +1,1 @@
-from src.isla import inicializar_juego
+from src.isla import inicializar_juego, posicion_inicial_del_jugador, generar_mapa

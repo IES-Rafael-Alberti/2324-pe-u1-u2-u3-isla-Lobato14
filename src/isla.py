@@ -116,7 +116,7 @@ def inicializar_juego() -> tuple:
 
     Returns
     ------- 
-    - str:
+    - tuple:
         El mapa y la posición del jugador.
     """
     posicion_jugador = posicion_inicial_del_jugador()
@@ -166,6 +166,7 @@ def generar_mapa() -> list:
     for i in range(DIMENSIONES):
         for j in range(DIMENSIONES):
             if mapa[i][j] != CELDA_TESORO:
+                # Decidir aleatoriamente si colocar una pista, una trampa o vacía.
                 opciones = [genera_pista((tesoro_x, tesoro_y), (i, j))]
                 opciones += [CELDA_TRAMPA]
                 opciones += [CELDA_VACIA]
@@ -173,10 +174,10 @@ def generar_mapa() -> list:
     return mapa
 
 
-def genera_pista(posicion_tesoro:tuple, posicion:tuple):
+def genera_pista(posicion_tesoro: tuple, posicion: tuple):
     """
     Genera una pista para el mapa, en función de donde se encuentre el tesoro.
-    Decidirá si la pista es sobre la fila o la columna basada en la aleatoriedad. Ademas tiene en cuenta que
+    Decidirá si la pista es sobre la fila o la columna basada en la aleatoriedad. Además tiene en cuenta que
     si está en la misma fila que el tesoro, generará la pista para las columnas. Y si está en la misma columna
     generará la pista para la fila.
 
@@ -198,12 +199,22 @@ def genera_pista(posicion_tesoro:tuple, posicion:tuple):
         return genera_pista_columnas(posicion_tesoro, posicion) or genera_pista_filas(posicion_tesoro, posicion)
 
 
-def genera_pista_filas(posicion_tesoro: tuple, posicion: tuple):
-    """Genera una pista basada en la comparación de filas.
-    :param posicion_tesoro: La posición del tesoro.
-    :param posicion: La posición para la que se genera la pista.
-    :return: La pista generada.
+def genera_pista_filas(posicion_tesoro: tuple, posicion: tuple) -> str:
+    """
+    Genera una pista basada en la comparación de filas.
 
+    Parameters
+    ----------
+
+    - posicion_tesoro : tuple
+        La posición del tesoro.
+    - posicion : tuple
+        La posición para la que se genera la pista.
+
+    Returns
+    -------
+    -str:
+        La pista generada.
     """
     if posicion_tesoro[FILAS] < posicion[FILAS]:
         return ARRIBA
@@ -212,11 +223,22 @@ def genera_pista_filas(posicion_tesoro: tuple, posicion: tuple):
     return ""
 
 
-def genera_pista_columnas(posicion_tesoro: tuple, posicion: tuple):
+def genera_pista_columnas(posicion_tesoro: tuple, posicion: tuple) -> str:
     """Genera una pista basada en la comparación de columnas.
-    :param posicion_tesoro: La posición del tesoro.
-    :param posicion: La posición para la que se genera la pista.
-    :return: La pista generada.
+
+    Parameters
+    ----------
+
+    - posicion_tesoro : tuple
+        La posición del tesoro.
+
+    - posicion : tuple
+        La posición para la que se genera la pista.
+
+    Returns
+    --------
+    - str: 
+        La pista generada.
     """
     if posicion_tesoro[COLUMNAS] < posicion[COLUMNAS]:
         return IZQUIERDA
@@ -228,7 +250,16 @@ def genera_pista_columnas(posicion_tesoro: tuple, posicion: tuple):
 def pedir_movimiento(mapa: list) -> str:
     """
     Pide al jugador su próximo movimiento y devuelve las coordenadas de desplazamiento.
-    return: el movimiento del jugador
+
+    Parameters
+    ----------
+    - mapa : list
+        Mapa del tesoro
+    
+    Returns
+    -------
+    - str:
+        El movimiento del jugador
     """
     entrada_correcta = False
 
@@ -264,8 +295,8 @@ def obtener_nueva_posicion(posicion_jugador: tuple, movimiento: str) -> tuple:
         La nueva posición del jugador.
     """
 
-    direccion = MOVIMIENTOS(movimiento)
-    nueva_posicion = [posicion_jugador[FILAS] + direccion[FILAS], posicion_jugador[COLUMNAS] + direccion[COLUMNAS]]
+    direccion = MOVIMIENTOS[movimiento]
+    nueva_posicion = (posicion_jugador[FILAS] + direccion[FILAS], posicion_jugador[COLUMNAS] + direccion[COLUMNAS])
     return nueva_posicion
 
 
@@ -298,36 +329,67 @@ def procesar_movimiento(posicion: tuple, mapa: list) -> int:
     return resultado
 
 
-def simbolo_celda(celda):
-    """Retorna el símbolo a pintar en la celda"""
+def simbolo_celda(celda : tuple) -> str:
+    """
+    Retorna el símbolo a pintar en la celda
+    
+    Returns
+    -------
+    - str:
+        Retorna DESCONOCIDO si la celda es distinta a la vacía y en caso contrario
+        CELDA_VACIA
+
+    """
     if celda != CELDA_VACIA:
         return DESCONOCIDO
     else:
         return CELDA_VACIA 
 
 
-def imprimir_mapa_oculto(mapa: list):
-    """Imprime el mapa sin revelar el tesoro ni las trampas."""
+def imprimir_mapa_oculto(mapa: list) -> None:
+    """
+    Imprime el mapa sin revelar el tesoro ni las trampas.
+
+    Returns
+    -------
+    - None
+    """
     for fila in mapa:
         print(" ".join([simbolo_celda(celda) for celda in fila]))
 
 
-def imprimir_mapa(mapa: list):
+def imprimir_mapa(mapa: list) -> None:
     """
     Imprime el mapa.
-    :param mapa: El mapa a imprimir.
+
+    Parameters
+    ----------
+    - mapa: list 
+        El mapa a imprimir.
     """
     for fila in mapa:
         print(" ".join([simbolo_celda(celda) for celda in fila]))
 
 
-def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa: list):
+def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa: list) -> None:
     """
     Muestra en consola el resultado del movimiento del jugador.
-    :param resultado: El resultado del movimiento.
-    :param nueva_posicion: La nueva posición del jugador.
-    :param mapa: El mapa del juego.
 
+    Parameters
+    ----------
+
+    - resultado : int 
+        El resultado del movimiento.
+
+    - nueva_posicion: tuple
+        La nueva posición del jugador.
+
+    - mapa : list
+        El mapa del juego.
+
+    Returns
+    -------
+    - None
     """
     if resultado == MOVIMIENTO_INVALIDO:
         print("Movimiento inválido. Estás intentando salir del mapa.")
@@ -340,16 +402,36 @@ def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa
         print(f"Hay una pista!!!! La pista es: {pista}")
 
 
-def muestra_estado_mapa(mapa, posicion_jugador):
-    """Muestra el mapa y la posición del jugador."""
+def muestra_estado_mapa(mapa:list, posicion_jugador:list) -> None:
+    """
+    Muestra el mapa y la posición del jugador.
+    
+    Parameters
+    ----------
+    - mapa : list
+        Mapa del tesoro
+    
+    - posicion_jugador : list[list[int][int]]
+        Posición en donde se encuentra el jugador
+    
+    Returns
+    -------
+    - None
+
+    """
 
     imprimir_mapa_oculto(mapa)
     print(f"Tu posición es {posicion_jugador}")
 
 
-def jugar():
-    """Función principal para iniciar el juego."""
-
+def jugar() -> None:
+    """
+    Función principal para iniciar el juego.
+    
+    Returns
+    -------
+    - None
+    """
     # Iniciar el mapa y al jugador en el centro del mapa
     mapa, posicion_jugador = inicializar_juego()
     muestra_estado_mapa(mapa, posicion_jugador)
@@ -360,7 +442,7 @@ def jugar():
     while movimiento != SALIR and resultado_movimiento != TESORO_ENCONTRADO:
 
         # Obtener la nueva posición del jugador y procesar el movimiento
-        nueva_posicion = obtener_nueva_posicion(posicion_jugador)
+        nueva_posicion = obtener_nueva_posicion(posicion_jugador, movimiento)
         resultado_movimiento = procesar_movimiento(nueva_posicion, mapa)
 
         muestra_resultado_del_movimiento(resultado_movimiento, nueva_posicion, mapa)
@@ -372,7 +454,6 @@ def jugar():
 
             muestra_estado_mapa(mapa, posicion_jugador)
             movimiento = pedir_movimiento(mapa)
-
 
 if __name__ == "__main__":
     jugar()

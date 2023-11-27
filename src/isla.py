@@ -149,14 +149,14 @@ def generar_mapa() -> list:
     mapa[tesoro_x][tesoro_y] = CELDA_TESORO
 
     # Colocar pistas y trampas
-    
-            if mapa[i][j] != CELDA_TESORO:
-                # Decidir aleatoriamente si colocar una pista, una trampa o vacia.
-                opciones = [genera_pista((tesoro_x, tesoro_y), (i, j))]
-                opciones += [CELDA_TRAMPA]
-                opciones += [CELDA_VACIA]
-                mapa[i][j] = random.choice(opciones)
 
+    for i, j in mapa:
+        if mapa[i][j] != CELDA_TESORO:
+            # Decidir aleatoriamente si colocar una pista, una trampa o vacia.
+            opciones = [genera_pista((tesoro_x, tesoro_y), (i, j))]
+            opciones += [CELDA_TRAMPA]
+            opciones += [CELDA_VACIA]
+            mapa[i][j] = random.choice(opciones)
     return mapa
 
 
@@ -279,7 +279,7 @@ def imprimir_mapa(mapa: list):
     :param mapa: El mapa a imprimir.
     """
     for fila in mapa:
-        print fila
+        return fila
 
 
 def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa: list):

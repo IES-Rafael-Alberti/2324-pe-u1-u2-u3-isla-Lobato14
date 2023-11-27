@@ -1,0 +1,1 @@
+from src.isla import inicializar_juego

@@ -163,14 +163,9 @@ def generar_mapa() -> list:
     mapa[tesoro_x][tesoro_y] = CELDA_TESORO
 
     # Colocar pistas y trampas
-
-    pistas_colocadas = 0
-    trampas_colocadas = 0
-
-    while pistas_colocadas < PISTA_ENCONTRADA and trampas_colocadas < TRAMPA_ENCONTRADA:
-        for i, j in mapa:
+    for i in range(DIMENSIONES):
+        for j in range(DIMENSIONES):
             if mapa[i][j] != CELDA_TESORO:
-                # Decidir aleatoriamente si colocar una pista, una trampa o vacia.
                 opciones = [genera_pista((tesoro_x, tesoro_y), (i, j))]
                 opciones += [CELDA_TRAMPA]
                 opciones += [CELDA_VACIA]
@@ -247,7 +242,6 @@ def pedir_movimiento(mapa: list) -> str:
         if not entrada_correcta:
             entrada = input(
                 "Ingresa tu movimiento (formato: 'u:arriba', 'd:abajo', 'l:izquierda', 'r:derecha', q:salir): ")
-
     return entrada
 
 
@@ -271,7 +265,7 @@ def obtener_nueva_posicion(posicion_jugador: tuple, movimiento: str) -> tuple:
     """
 
     direccion = MOVIMIENTOS(movimiento)
-    nueva_posicion = (posicion_jugador[FILAS] + direccion[FILAS], posicion_jugador[COLUMNAS] + direccion[COLUMNAS])
+    nueva_posicion = [posicion_jugador[FILAS] + direccion[FILAS], posicion_jugador[COLUMNAS] + direccion[COLUMNAS]]
     return nueva_posicion
 
 
